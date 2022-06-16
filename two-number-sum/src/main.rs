@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 struct TwoNumberSum;
 
 #[derive(Debug)]
@@ -6,6 +8,7 @@ enum SumResult {
     NotFound([i8; 0]),
 }
 
+#[allow(dead_code)]
 impl TwoNumberSum {
     fn find_using_nested_loop(vector: Vec<i8>, target_sum: i8) -> SumResult {
         let mut result: SumResult = SumResult::NotFound([]);
@@ -21,9 +24,24 @@ impl TwoNumberSum {
         }
         result
     }
+
+    fn find_using_hash_map(vector: Vec<i8>, target_sum: i8) -> SumResult {
+        let mut result: SumResult = SumResult::NotFound([]);
+        let mut nums: HashMap<i8, bool> = HashMap::new();
+        for num in vector.iter() {
+            let possible_match = target_sum - num;
+            if nums.contains_key(&possible_match) {
+                result = SumResult::Found([*num, possible_match]);
+            } else {
+                nums.insert(*num, true);
+            }
+        }
+        result
+    }
 }
 
 fn main() {
     let v: Vec<i8> = vec!(3,5,-4,8,11,1,-1,6);
-    println!("{:?}", TwoNumberSum::find_using_nested_loop(v, 10));
+    // println!("{:?}", TwoNumberSum::find_using_nested_loop(v, 10));
+    println!("{:?}", TwoNumberSum::find_using_hash_map(v, 10));
 }
